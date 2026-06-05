@@ -1,8 +1,8 @@
 # Improved RegNet with Dual Attention for English Proficiency Assessment
 
-官方 PyTorch 实现 | 论文发表于 *Information* 期刊，标题：《English Proficiency Assessment Based on Improved RegNet and Dual Attention Mechanism》
+>官方 PyTorch 实现 | 论文发表于 *Information* 期刊，标题：《English Proficiency Assessment Based on Improved RegNet and Dual Attention Mechanism》
 
-提出改进 RegNet 架构融合可变形注意力（DAT）与图注意力（GAT）的模型，实现英语专业学生学业达标/预警的二分类，辅助智慧校园中的精准教学管理。
+>提出改进 RegNet 架构融合可变形注意力（DAT）与图注意力（GAT）的模型，实现英语专业学生学业达标/预警的二分类，辅助智慧校园中的精准教学管理。
 
 ## 1. 研究背景与模型定位
 
