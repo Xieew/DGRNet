@@ -35,27 +35,24 @@
 ### 3.2 数据集结构
 
 仓库中 `Ac/` 文件夹组织如下（需自行通过 GAF 转换生成）：
-##  项目文件结构
-```text
-DGRNet/
+可通过百度网盘获取完整文件：
+
+通过网盘分享的文件：Ac.zip
+链接: https://pan.baidu.com/s/1OwO38HIXWAkgRsrXJVGGew 
+```bash
 |-- Ac/
 |   |-- train/
-|   |   |-- Eligible/
-|   |   `-- NotEligible/
+|   |   |-- E/
+|   |   `-- NE/
 |   |-- val/
-|   |   |-- Eligible/
-|   |   `-- NotEligible/
+|   |   |-- E/
+|   |   `-- NE/
 |   `-- test/
-|       |-- Eligible/
-|       `-- NotEligible/
-|-- weights3_fast/
-|-- model3.py
-|-- train3.py
-|-- my_dataset.py
-|-- utils.py
-|-- training_fast.txt
-`-- README.md
+|       |-- E/
+|       `-- NE/
 ```
+适用场景：仅针对英语专业学生的“达标/预警”二分类。
+
 ## 4. 实验环境配置
 
 ### 4.1 依赖安装
@@ -163,24 +160,41 @@ with torch.no_grad():
 预测类别：达标
 置信度：0.9972
 ```
-### 6.3 数据集
-可通过百度网盘获取完整文件：
 
-通过网盘分享的文件：Ac.zip
-链接: https://pan.baidu.com/s/1OwO38HIXWAkgRsrXJVGGew 
+## 7.项目文件结构
 ```bash
-|-- Ac/
-|   |-- train/
-|   |   |-- E/
-|   |   `-- NE/
-|   |-- val/
-|   |   |-- E/
-|   |   `-- NE/
-|   `-- test/
-|       |-- E/
-|       `-- NE/
+DGRNet/
+├── Ac/                           # GAF 转换后的图像数据集（需自行准备）
+│   ├── train/
+│   │   ├── Eligible/
+│   │   └── NotEligible/
+│   ├── val/
+│   │   ├── Eligible/
+│   │   └── NotEligible/
+│   └── test/
+│       ├── Eligible/
+│       └── NotEligible/
+├── weights3_fast/                # 训练保存的模型权重
+├── model3.py                     # 改进的 RegNet 模型定义（含双卷积 Stem、DAT、GAT）
+├── train3.py                     # 模型训练脚本
+├── my_dataset.py                 # 自定义 DataLoader
+├── utils.py                      # 评估、测试时增强等工具函数
+├── training_fast.txt             # 训练日志
+└── README.md                     # 项目说明文档（本文档）
 ```
-适用场景：仅针对英语专业学生的“达标/预警”二分类。
+## 8. 已知问题与注意事项
+
+- **注意力配置必须显式启用**：如果在 `train3.py` 中未传递 `dattention_config` 和 `gat_config`，模型将退化为纯 RegNet，性能远低于论文报告的 99.46% 准确率。
+
+- **数据集来源局限**：当前数据仅来自一所高校的英语专业学生。不同院校的课程设置、评分标准和学生群体特征可能存在差异，模型在其他教育环境下的泛化能力尚未验证。
+
+- **可能对特定学生群体过拟合**：数据集仅包含 6165 张来自单一院校的 GAF 图像。报告的 99.46% 高精度应视为在该特定数据集上的表现，而非跨校泛化的直接证据。未来应纳入多校数据并引入联邦学习。
+
+- **显存与批次大小**：使用 batch size = 32 时，约需 6 GB 显存。若显存不足，可降低至 16 或使用梯度累积。混合精度训练（AMP）已支持并在检测到 CUDA 设备时默认启用。
+
+- **预训练权重**：脚本默认加载 ImageNet 预训练权重（`regnety_400mf.pth`）。若未提供权重，模型将随机初始化，可能减慢收敛速度。
+
+- **环境适应性**：模型对个体差异（如成绩波动、不规则出勤模式）的鲁棒性以及边缘部署效率仍有待进一步提升。
 
 ## 9. 引用与联系方式
 ### 9.1 引用方式
